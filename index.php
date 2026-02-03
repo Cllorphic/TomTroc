@@ -9,6 +9,8 @@ require_once __DIR__ . '/controller/AccountController.php';
 require_once __DIR__ . '/controller/BookController.php';
 require_once __DIR__ . '/controller/HomeController.php';
 require_once __DIR__ . '/controller/LibraryController.php';
+require_once __DIR__ . '/controller/PublicAccountController.php';
+
 
 
 
@@ -115,6 +117,11 @@ case 'book-delete':
     require_once __DIR__ . '/controller/ArticleController.php';
     (new ArticleController())->show();
     break;
+
+    case 'public-account':
+    (new PublicAccountController())->show();
+    break;
+
 
 
     default:

@@ -20,8 +20,8 @@ if (!$avatarUrl) {
     $avatarUrl = (defined('BASE_URL') ? BASE_URL : '') . '/assets/img/avatar-default.png';
 }
 
-// lien vers futur profil user
-$userHref = "index.php?route=user&id=" . urlencode((string)($book['user_id'] ?? 0));
+// lien vers profil user
+$userHref = "index.php?route=public-account&id=" . urlencode((string)($book['user_id'] ?? 0));
 ?>
 
 <?php require_once __DIR__ . '/../layout/header.php'; ?>

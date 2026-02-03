@@ -1601,3 +1601,376 @@ body.page-article .article__cta:hover{
     bottom: 20px;
   }
 }
+/* =========================
+   PUBLIC ACCOUNT - Refonte complète selon maquette
+   ========================= */
+
+/* Conteneur principal */
+body.page-public-account .public-account{
+  padding: 90px 0 70px;
+}
+
+/* Grille 2 colonnes : gauche fixe + droite flexible */
+.public-account__grid{
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 33px;
+  align-items: start;
+}
+
+/* =========================
+   COLONNE GAUCHE - Carte profil
+   ========================= */
+
+.public-account__card{
+  background: var(--white);
+  border-radius: 20px;
+  padding: 42px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+}
+
+/* Avatar rond */
+.public-account__avatar{
+  width: 155px;
+  height: 155px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #D9D9D9;
+  margin-bottom: 28px;
+}
+
+.public-account__avatar img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.public-account__avatar-ph{
+  width: 100%;
+  height: 100%;
+  background: #E9E9E9;
+}
+
+/* Nom utilisateur */
+.public-account__name{
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 37px;
+  color: var(--text);
+  margin: 0 0 8px 0;
+  text-align: center;
+}
+
+/* Membre depuis */
+.public-account__meta{
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* Séparateur */
+.public-account__sep{
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin: 0 0 24px 0;
+}
+
+/* Statistique bibliothèque */
+.public-account__stat{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  padding: 0 8px;
+}
+
+.public-account__stat-label{
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 600;
+  font-size: 8px;
+  line-height: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.public-account__stat-value{
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.public-account__stat-value::before{
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-image: url("../img/uploads/icones/livre.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* Bouton "Écrire un message" */
+.public-account__card .btn{
+  width: 100%;
+  height: 63px;
+  border-radius: 10px;
+  background: var(--green);
+  color: var(--white);
+  border: none;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 19px;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.2s ease;
+}
+
+.public-account__card .btn:hover{
+  filter: brightness(0.95);
+}
+
+/* =========================
+   COLONNE DROITE - Liste des livres
+   ========================= */
+
+.public-account__list{
+  width: 100%;
+}
+
+/* Tableau des livres */
+.public-account__table{
+  background: var(--white);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+}
+
+/* En-tête du tableau */
+.public-account__thead{
+  display: grid;
+  grid-template-columns: 110px 1fr 1fr 1.6fr;
+  gap: 20px;
+  padding: 22px 32px;
+  background: var(--white);
+  border-bottom: 1px solid var(--bar);
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 600;
+  font-size: 8px;
+  line-height: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+/* Lignes du tableau */
+.public-account__row{
+  display: grid;
+  grid-template-columns: 110px 1fr 1fr 1.6fr;
+  gap: 20px;
+  padding: 20px 32px;
+  text-decoration: none;
+  color: var(--text);
+  transition: background 0.15s ease;
+  cursor: pointer;
+}
+
+/* Alternance de couleurs */
+.public-account__row:nth-child(odd){
+  background: var(--white);
+}
+
+.public-account__row:nth-child(even){
+  background: var(--soft);
+}
+
+.public-account__row:hover{
+  background: #E8F0F2;
+}
+
+/* Cellules */
+.public-account__cell{
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Image du livre */
+.public-account__bookimg{
+  width: 78px;
+  height: 78px;
+  object-fit: cover;
+  display: block;
+  border-radius: 4px;
+}
+
+.public-account__bookimg-ph{
+  width: 78px;
+  height: 78px;
+  border-radius: 4px;
+  background: #E9E9E9;
+}
+
+/* Message vide */
+.public-account__empty{
+  padding: 48px 32px;
+  text-align: center;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* =========================
+   PAGINATION
+   ========================= */
+
+.library-pagination{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.library-pagination__link{
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  border: 1px solid rgba(0,0,0,0.08);
+  color: var(--text);
+  background: var(--white);
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.library-pagination__link:hover{
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.library-pagination__link.is-active{
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--white);
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 1200px){
+  .public-account__grid{
+    grid-template-columns: 320px 1fr;
+    gap: 24px;
+  }
+  
+  .public-account__card{
+    padding: 32px 24px;
+  }
+  
+  .public-account__thead,
+  .public-account__row{
+    grid-template-columns: 90px 1fr 1fr 1.4fr;
+    gap: 16px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  
+  .public-account__bookimg,
+  .public-account__bookimg-ph{
+    width: 68px;
+    height: 68px;
+  }
+}
+
+@media (max-width: 992px){
+  .public-account__grid{
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  .public-account__card{
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .public-account__thead{
+    grid-template-columns: 100px 1.2fr 1fr 1.8fr;
+    font-size: 7px;
+  }
+  
+  .public-account__row{
+    grid-template-columns: 100px 1.2fr 1fr 1.8fr;
+  }
+}
+
+@media (max-width: 768px){
+  .public-account__thead{
+    grid-template-columns: 80px 1fr;
+    gap: 12px;
+  }
+  
+  .public-account__thead div:nth-child(3),
+  .public-account__thead div:nth-child(4){
+    display: none;
+  }
+  
+  .public-account__row{
+    grid-template-columns: 80px 1fr;
+    gap: 12px;
+    padding: 16px 20px;
+  }
+  
+  .public-account__cell:nth-child(3),
+  .public-account__cell:nth-child(4){
+    display: none;
+  }
+  
+  .public-account__bookimg,
+  .public-account__bookimg-ph{
+    width: 64px;
+    height: 64px;
+  }
+  
+  .public-account__avatar{
+    width: 120px;
+    height: 120px;
+  }
+  
+  .public-account__name{
+    font-size: 24px;
+    line-height: 32px;
+  }
+}
