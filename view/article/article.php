@@ -65,9 +65,10 @@ $userHref = "index.php?route=public-account&id=" . urlencode((string)($book['use
 
       <!-- CTA -->
       <a class="article__cta"
-         href="index.php?route=message&to=<?= urlencode($book['username'] ?? '') ?>">
-        Envoyer un message
-      </a>
+   href="index.php?route=messaging&to=<?= urlencode((string)($book['user_id'] ?? 0)) ?>">
+  Envoyer un message
+</a>
+
 
     </div>
 

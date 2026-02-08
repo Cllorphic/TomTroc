@@ -10,6 +10,8 @@ require_once __DIR__ . '/controller/BookController.php';
 require_once __DIR__ . '/controller/HomeController.php';
 require_once __DIR__ . '/controller/LibraryController.php';
 require_once __DIR__ . '/controller/PublicAccountController.php';
+require_once __DIR__ . '/controller/MessagingController.php';
+
 
 
 
@@ -120,6 +122,29 @@ case 'book-delete':
 
     case 'public-account':
     (new PublicAccountController())->show();
+    break;
+
+    case 'messaging':
+    if (empty($_SESSION['user'])) {
+        header("Location: index.php?route=login");
+        exit;
+    }
+    require_once __DIR__ . '/controller/MessagingController.php';
+    (new MessagingController())->index();
+    break;
+
+case 'messaging-send':
+    if (empty($_SESSION['user'])) {
+        header("Location: index.php?route=login");
+        exit;
+    }
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        echo "Méthode non autorisée.";
+        exit;
+    }
+    require_once __DIR__ . '/controller/MessagingController.php';
+    (new MessagingController())->send();
     break;
 
 

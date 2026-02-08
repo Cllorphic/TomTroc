@@ -1974,3 +1974,427 @@ body.page-public-account .public-account{
     line-height: 32px;
   }
 }
+
+/* =========================
+   MESSAGING (page messagerie)
+   CSS COMPLET - Maquette Figma
+   ========================= */
+
+/* Container principal de la messagerie */
+.messagerie {
+  background: #F5F3EF;
+  min-height: calc(100vh - 80px - 61px);
+  padding: 0;
+}
+
+/* Grille 2 colonnes : 308px (sidebar) + reste (conversation) */
+.messagerie__grid {
+  display: grid;
+  grid-template-columns: 308px 1fr;
+  gap: 0;
+  align-items: stretch;
+  min-height: calc(100vh - 80px - 61px);
+}
+
+/* =========================
+   COLONNE GAUCHE (sidebar)
+   ========================= */
+
+.messagerie__sidebar {
+  width: 308px;
+  background: #FAF9F7;
+  min-height: 100%;
+  padding-top: 55px;
+}
+
+/* Titre "Messagerie" */
+.messagerie__title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 35px;
+  color: #000000;
+  margin: 0 0 62px 34px;
+}
+
+/* Container des conversations */
+.messagerie__threads {
+  background: #FAF9F7;
+  width: 308px;
+}
+
+/* Message vide */
+.messagerie__empty {
+  background: #FFFFFF;
+  padding: 40px 20px;
+  text-align: center;
+  color: #A6A6A6;
+  font-size: 14px;
+}
+
+/* Une conversation (thread) */
+.messagerie__thread {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  column-gap: 14px;
+  align-items: center;
+  padding: 20px 18px;
+  text-decoration: none;
+  color: #292929;
+  background: #FFFFFF;
+  margin-bottom: 1px;
+  transition: background 0.2s;
+  position: relative;
+}
+
+.messagerie__thread:hover,
+.messagerie__thread.is-active {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+/* Avatar rond */
+.messagerie__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #D9D9D9;
+  flex-shrink: 0;
+}
+
+.messagerie__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.messagerie__avatar-ph {
+  width: 100%;
+  height: 100%;
+  background: #D9D9D9;
+}
+
+/* Bloc texte (nom + preview) */
+.messagerie__threadBody {
+  min-width: 0;
+  flex: 1;
+}
+
+.messagerie__threadTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+/* Nom de l'utilisateur */
+.messagerie__threadName {
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #292929;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Heure (ex: 15:43) */
+.messagerie__threadTime {
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  color: #292929;
+  flex-shrink: 0;
+}
+
+/* Preview du message (gris) */
+.messagerie__threadSnippet {
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  color: #A6A6A6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Badge non lu */
+.messagerie__unread {
+  width: 20px;
+  height: 20px;
+  background: #00AC66;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+
+/* =========================
+   COLONNE DROITE (conversation)
+   ========================= */
+
+.messagerie__main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 55px 0 80px 94px;
+}
+
+/* EN-TÊTE DE CONVERSATION (Avatar + Nom) */
+.messagerie__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.messagerie__header-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #D9D9D9;
+  flex-shrink: 0;
+}
+
+.messagerie__header-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.messagerie__header-avatar-ph {
+  width: 100%;
+  height: 100%;
+  background: #D9D9D9;
+}
+
+.messagerie__header-name {
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 17px;
+  color: #292929;
+}
+
+/* Placeholder quand aucune conversation sélectionnée */
+.messagerie__placeholder {
+  padding: 60px 20px;
+  text-align: center;
+  color: #A6A6A6;
+  font-size: 16px;
+}
+
+/* Zone des messages */
+.messagerie__messages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+
+/* Un message */
+.messagerie__msg {
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+.messagerie__msg.is-mine {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.messagerie__msg.is-their {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+/* Heure au-dessus du message */
+.messagerie__msgTime {
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  color: #A6A6A6;
+  margin-bottom: 6px;
+}
+
+/* Bulle de message */
+.messagerie__bubble {
+  border-radius: 3px;
+  padding: 10px 18px;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  color: #292929;
+  word-wrap: break-word;
+}
+
+.messagerie__msg.is-mine .messagerie__bubble {
+  background: #EDF2F6;
+  text-align: right;
+}
+
+.messagerie__msg.is-their .messagerie__bubble {
+  background: #FFFFFF;
+  text-align: left;
+}
+
+/* =========================
+   FORMULAIRE D'ENVOI
+   ========================= */
+
+.messagerie__form {
+  display: flex;
+  align-items: center;
+  gap: 21px;
+  margin-top: auto;
+}
+
+/* Input de saisie */
+.messagerie__input {
+  width: 628px;
+  max-width: 100%;
+  height: 49px;
+  background: #FFFFFF;
+  border: 1px solid #F0F0F0;
+  border-radius: 6px;
+  padding: 0 22px;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #292929;
+  outline: none;
+}
+
+.messagerie__input::placeholder {
+  color: #A6A6A6;
+}
+
+.messagerie__input:focus {
+  border-color: #00AC66;
+}
+
+/* Bouton Envoyer */
+.messagerie__btn {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 22px 38px;
+  gap: 10px;
+  width: 132px;
+  height: 49px;
+  background: #00AC66;
+  border-radius: 10px;
+  border: 0;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 19px;
+  text-align: center;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.messagerie__btn:hover {
+  background: #009955;
+  filter: brightness(0.95);
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 1200px) {
+  .messagerie__main {
+    padding-left: 40px;
+  }
+}
+
+@media (max-width: 900px) {
+  .messagerie__grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    min-height: auto;
+  }
+
+  .messagerie__sidebar {
+    width: 100%;
+    min-height: auto;
+    padding-top: 40px;
+  }
+  
+  .messagerie__threads {
+    width: 100%;
+  }
+
+  .messagerie__main {
+    padding-left: 0;
+    padding-top: 40px;
+  }
+
+  .messagerie__msg {
+    max-width: 100%;
+  }
+
+  .messagerie__input {
+    width: 100%;
+  }
+
+  .messagerie__form {
+    flex-wrap: wrap;
+  }
+
+  .messagerie__btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .messagerie {
+    padding: 0;
+  }
+
+  .messagerie__sidebar {
+    padding-top: 30px;
+  }
+
+  .messagerie__title {
+    margin-bottom: 30px;
+    margin-left: 20px;
+    font-size: 22px;
+  }
+
+  .messagerie__thread {
+    padding: 16px 12px;
+  }
+
+  .messagerie__bubble {
+    font-size: 13px;
+    padding: 12px 16px;
+  }
+
+  .messagerie__main {
+    padding: 30px 20px 60px 20px;
+  }
+}

@@ -19,8 +19,8 @@ $avatar = imgUrl($user['avatar'] ?? '');
 $username = $user['username'] ?? 'Utilisateur';
 $memberSince = !empty($user['created_at']) ? date('d/m/Y', strtotime($user['created_at'])) : null;
 
-// Exemple de lien pour “écrire un message” (adapte à ton système)
-$messageHref = "index.php?route=messagerie&to=" . urlencode((string)$user['id']);
+//lien pour “écrire un message”
+$messageHref = "index.php?route=messaging&to=" . urlencode((string)$user['id']);
 ?>
 
 <?php require __DIR__ . '/../layout/header.php'; ?>
