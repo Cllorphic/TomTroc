@@ -32,7 +32,21 @@ class MessagingController
 
         // Arrivée depuis "Envoyer un message"
         if ($to > 0) {
-            $conversationId = $this->model->getOrCreateConversation($me, $to);
+
+            // ✅ Empêche de créer une conversation avec soi-même : on ne fait rien
+            if ($to === $me) {
+                header("Location: index.php?route=messaging");
+                exit;
+            }
+
+            // ✅ Sécurité : si le modèle throw quand même, on évite le fatal error
+            try {
+                $conversationId = $this->model->getOrCreateConversation($me, $to);
+            } catch (RuntimeException $e) {
+                header("Location: index.php?route=messaging");
+                exit;
+            }
+
             header("Location: index.php?route=messaging&c=" . urlencode((string)$conversationId));
             exit;
         }
