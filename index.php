@@ -151,6 +151,6 @@ case 'messaging-send':
 
     default:
         http_response_code(404);
-        echo "404 - page introuvable";
+        require __DIR__ . '/404.php';
         break;
 }

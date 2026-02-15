@@ -2409,3 +2409,59 @@ body.page-public-account .public-account{
     padding: 30px 20px 60px 20px;
   }
 }
+/* =========================
+   404 - Page introuvable
+   ========================= */
+
+body.page-404 {
+  background: var(--bg);
+}
+
+.page-404 main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-404 .error {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 64px 72px;
+  text-align: center;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+  max-width: 520px;
+}
+
+.page-404 .error__code {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 96px;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.page-404 .error__text {
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--text);
+  margin-bottom: 32px;
+}
+
+.page-404 .error__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 63px;
+  padding: 0 38px;
+  border-radius: 10px;
+  background: var(--green);
+  color: var(--white);
+  font-weight: 600;
+  font-size: 16px;
+  text-decoration: none;
+  transition: filter 0.2s ease;
+}
+
+.page-404 .error__btn:hover {
+  filter: brightness(0.95);
+}

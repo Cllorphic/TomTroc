@@ -12,9 +12,7 @@ $isLoggedIn = !empty($_SESSION['user']);
 $unreadCount = 0;
 
 /**
- * Badge non-lus :
- * On essaie de charger Database + MessagingModel peu importe où est placé le header (view/layout, etc.).
- * Si on ne trouve pas les fichiers, on laisse $unreadCount = 0 (pas de crash).
+ * Badge non-lus
  */
 if ($isLoggedIn) {
     $me = (int)($_SESSION['user']['id'] ?? 0);
@@ -32,25 +30,21 @@ if ($isLoggedIn) {
             __DIR__ . '/model/MessagingModel.php',
         ];
 
-        $dbLoaded = false;
         foreach ($dbPaths as $p) {
             if (file_exists($p)) {
                 require_once $p;
-                $dbLoaded = true;
                 break;
             }
         }
 
-        $modelLoaded = false;
         foreach ($modelPaths as $p) {
             if (file_exists($p)) {
                 require_once $p;
-                $modelLoaded = true;
                 break;
             }
         }
 
-        if ($dbLoaded && $modelLoaded && class_exists('Database') && class_exists('MessagingModel')) {
+        if (class_exists('Database') && class_exists('MessagingModel')) {
             try {
                 $pdo = Database::getConnection();
                 $messagingModel = new MessagingModel($pdo);
@@ -62,7 +56,6 @@ if ($isLoggedIn) {
     }
 }
 ?>
-
 <!doctype html>
 <html lang="fr">
 <head>
@@ -71,7 +64,6 @@ if ($isLoggedIn) {
 
   <title><?= htmlspecialchars($title) ?></title>
 
-  <!-- CSS global -->
   <link rel="stylesheet" href="<?= htmlspecialchars(ASSET_URL) ?>/css/style.css">
 </head>
 
@@ -80,23 +72,19 @@ if ($isLoggedIn) {
 <header class="topbar">
   <div class="topbar__inner">
 
-    <!-- Logo -->
     <a class="logo" href="index.php?route=home" aria-label="TomTroc - Accueil">
       <img class="logo__img" src="<?= htmlspecialchars(ASSET_URL) ?>/img/uploads/logo/logo.svg" alt="TomTroc">
     </a>
 
-    <!-- Menu centre -->
     <nav class="nav nav--center">
       <a class="nav__link" href="index.php?route=home">Accueil</a>
       <a class="nav__link" href="index.php?route=books">Nos livres à l’échange</a>
     </nav>
 
-    <!-- Menu droite -->
     <nav class="nav nav--right">
       <?php if ($isLoggedIn): ?>
 
         <a class="nav__link nav__link--messaging" href="index.php?route=messaging">
-          <!-- icône EXISTANTE (ne pas changer) -->
           <img class="nav__icon-img" src="<?= htmlspecialchars(ASSET_URL) ?>/img/uploads/icones/Messagerie.svg" alt="">
           <span class="nav__messaging-text">Messagerie</span>
 
@@ -123,5 +111,3 @@ if ($isLoggedIn) {
 
   </div>
 </header>
-
-<main>
