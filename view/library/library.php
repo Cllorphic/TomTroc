@@ -1,5 +1,4 @@
 <?php
-// View : listing public
 $bodyClass = $bodyClass ?? 'page-books';
 $title = $title ?? "Nos livres à l'échange - TomTroc";
 
@@ -8,7 +7,6 @@ $page = $page ?? 1;
 $totalPages = $totalPages ?? 1;
 $books = $books ?? [];
 
-// URL image
 function libraryBookImg(?string $img): string
 {
     if (!$img) return '';
@@ -29,14 +27,18 @@ function libraryBookImg(?string $img): string
         <input type="hidden" name="route" value="books">
 
         <div class="library-search__wrap">
+          <label for="search-books" hidden>Rechercher un livre</label>
+
           <span class="library-search__icon">🔍</span>
           <input
-            class="library-search__input"
-            type="text"
-            name="q"
-            placeholder="Rechercher un livre"
-            value="<?= htmlspecialchars($q) ?>"
-          >
+  id="search-books"
+  class="library-search__input"
+  type="text"
+  name="q"
+  placeholder="Rechercher un livre"
+  value="<?= htmlspecialchars($q) ?>"
+  aria-label="Rechercher un livre"
+>
         </div>
       </form>
     </div>
@@ -45,17 +47,12 @@ function libraryBookImg(?string $img): string
       <?php foreach ($books as $b): ?>
         <?php
           $imgUrl = libraryBookImg($b['image'] ?? null);
-
-          // ✅ récupère l'id du livre (selon comment tu l'appelles en SQL)
           $bookId = $b['id'] ?? $b['book_id'] ?? null;
-
-          // ✅ lien vers la page article
           $href = $bookId ? "index.php?route=article&id=" . urlencode((string)$bookId) : "#";
         ?>
 
         <article class="library-card">
-          <!-- ✅ lien cliquable SANS casser le CSS : on garde <article> -->
-          <a href="<?= htmlspecialchars($href) ?>" style="display:block; height:100%; text-decoration:none; color:inherit;">
+          <a href="<?= htmlspecialchars($href) ?>" class="library-card__link">
 
             <div class="library-card__imgwrap">
               <?php if (!$b['is_available']): ?>

@@ -56,7 +56,7 @@ $vector    = BASE_URL . '/public/img/uploads/icones/Vector.svg';
 
           <article class="home-card">
             
-            <a href="<?= htmlspecialchars($href) ?>" style="display:block; height:100%; text-decoration:none; color:inherit;">
+            <a href="<?= htmlspecialchars($href) ?>" class="home-card__link">
               <div class="home-card__imgwrap">
                 <?php if ($imgUrl): ?>
                   <img class="home-card__img" src="<?= htmlspecialchars($imgUrl) ?>" alt="">

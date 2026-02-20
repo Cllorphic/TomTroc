@@ -94,6 +94,10 @@ class AccountController
 
         $userId = (int)$_SESSION['user']['id'];
 
+        // ✅ récupère l'ancien avatar AVANT remplacement
+        $user = $this->model->getUserById($userId);
+        $oldAvatar = $user['avatar'] ?? null;
+
         // Vérifie fichier
         if (empty($_FILES['avatar']) || $_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
             $_SESSION['flash_error'] = "Upload avatar échoué.";
@@ -143,7 +147,7 @@ class AccountController
             exit;
         }
 
-        // Chemin public DB
+        // Chemin public DB (✅ on garde ton chemin EXACT)
         $publicPath = 'public/uploads/avatars/' . $filename;
 
         // Update DB avatar
@@ -151,6 +155,9 @@ class AccountController
 
         // Update session avatar
         $_SESSION['user']['avatar'] = $publicPath;
+
+        // ✅ supprime l'ancien fichier avatar (après update réussi)
+        $this->deleteUploadedFile($oldAvatar);
 
         $_SESSION['flash_success'] = "Avatar mis à jour.";
         header("Location: index.php?route=account");
@@ -169,11 +176,45 @@ class AccountController
             exit;
         }
 
+        // ✅ récupère l'image du livre AVANT suppression
+        $books = $this->model->getBooksByUserId($userId);
+        $bookImage = null;
+        foreach ($books as $b) {
+            if ((int)$b['id'] === $bookId) {
+                $bookImage = $b['image'] ?? null;
+                break;
+            }
+        }
+
         // Delete sécurisé
         $ok = $this->model->deleteBook($bookId, $userId);
+
+        // ✅ si suppression OK, on supprime l'image
+        if ($ok) {
+            $this->deleteUploadedFile($bookImage);
+        }
 
         $_SESSION['flash_success'] = $ok ? "Livre supprimé." : "Action non autorisée.";
         header("Location: index.php?route=account");
         exit;
+    }
+    
+    private function deleteUploadedFile(?string $publicPath): void
+    {
+        if (!$publicPath) return;
+
+        // Sécurité : on ne supprime QUE dans public/uploads
+        $uploadsBase = realpath(__DIR__ . '/../public/uploads');
+        $fullPath = realpath(__DIR__ . '/../' . ltrim($publicPath, '/'));
+
+        if (!$uploadsBase || !$fullPath) return;
+
+        if (strpos($fullPath, $uploadsBase) !== 0) {
+            return; // empêche ../../ etc.
+        }
+
+        if (is_file($fullPath)) {
+            @unlink($fullPath);
+        }
     }
 }

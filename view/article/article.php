@@ -51,10 +51,11 @@ $userHref = "index.php?route=public-account&id=" . urlencode((string)($book['use
         <?= nl2br(htmlspecialchars($book['description'] ?? '')) ?>
       </div>
 
-      <div class="article__label" style="margin-top: 32px;">Propriétaire</div>
+       <div class="article__label article__label--spaced">Propriétaire</div>
 
-      <!-- ✅ Pill cliquable vers profil user (plus tard) -->
-      <a class="article__ownerCard" href="<?= htmlspecialchars($userHref) ?>" style="text-decoration:none; color:inherit;">
+      
+      <a class="article__ownerCard article__ownerCard--link"  href="<?= htmlspecialchars($userHref) ?>">
+
         <div class="article__ownerAvatar">
           <img src="<?= htmlspecialchars($avatarUrl) ?>" alt="">
         </div>

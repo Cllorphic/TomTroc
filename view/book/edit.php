@@ -6,7 +6,7 @@ $submitLabel = 'Valider';
 ?>
 
 <?php require __DIR__ . '/../layout/header.php'; ?>
-<link rel="stylesheet" href="<?= htmlspecialchars(ASSET_URL) ?>/css/style.css">
+
 
 <main class="account">
   <div class="container">

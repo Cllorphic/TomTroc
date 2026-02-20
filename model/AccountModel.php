@@ -1,64 +1,95 @@
 <?php
 
-// Model : gestion compte + livres
 class AccountModel
 {
-    // Connexion DB
     private PDO $pdo;
 
-    // Constructeur : injecte PDO
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
     }
 
-    // Récupère un utilisateur
-    public function getUserById(int $id): array
+    // Récupère un user par ID
+    public function getUserById(int $userId): array
     {
-        $stmt = $this->pdo->prepare("SELECT id, username, email, created_at, avatar FROM users WHERE id = :id");
-        $stmt->execute(['id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id = :id LIMIT 1");
+        $stmt->execute([':id' => $userId]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $user ?: [];
     }
 
-    // Met à jour username + email
-    public function updateUserInfos(int $id, string $username, string $email): void
-    {
-        $stmt = $this->pdo->prepare("UPDATE users SET username = :u, email = :e WHERE id = :id");
-        $stmt->execute(['u' => $username, 'e' => $email, 'id' => $id]);
-    }
-
-    // Met à jour le mot de passe
-    public function updatePasswordHash(int $id, string $hash): void
-    {
-        $stmt = $this->pdo->prepare("UPDATE users SET password_hash = :h WHERE id = :id");
-        $stmt->execute(['h' => $hash, 'id' => $id]);
-    }
-
-    // Met à jour l’avatar
-    public function updateAvatar(int $id, string $avatarPath): void
-    {
-        $stmt = $this->pdo->prepare("UPDATE users SET avatar = :a WHERE id = :id");
-        $stmt->execute(['a' => $avatarPath, 'id' => $id]);
-    }
-
-    // Liste les livres du user
+    // Récupère tous les livres d'un user
     public function getBooksByUserId(int $userId): array
     {
-        $stmt = $this->pdo->prepare("
-            SELECT id, user_id, title, author, description, image, is_available, created_at
-            FROM books
-            WHERE user_id = :uid
-            ORDER BY id DESC
-        ");
-        $stmt->execute(['uid' => $userId]);
+        $stmt = $this->pdo->prepare("SELECT * FROM books WHERE user_id = :user_id ORDER BY id DESC");
+        $stmt->execute([':user_id' => $userId]);
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
-    // Supprime un livre (si owner)
+    // Update username + email
+    public function updateUserInfos(int $userId, string $username, string $email): bool
+    {
+        $stmt = $this->pdo->prepare("
+            UPDATE users
+            SET username = :username, email = :email
+            WHERE id = :id
+        ");
+
+        return $stmt->execute([
+            ':username' => $username,
+            ':email'    => $email,
+            ':id'       => $userId,
+        ]);
+    }
+
+    // Update password hash 
+    public function updatePasswordHash(int $userId, string $hash): bool
+    {
+        $stmt = $this->pdo->prepare("
+            UPDATE users
+            SET password_hash = :password_hash
+            WHERE id = :id
+        ");
+
+        return $stmt->execute([
+            ':password_hash' => $hash,
+            ':id'            => $userId,
+        ]);
+    }
+
+    // Update avatar
+    public function updateAvatar(int $userId, string $avatarPath): bool
+    {
+        $stmt = $this->pdo->prepare("
+            UPDATE users
+            SET avatar = :avatar
+            WHERE id = :id
+        ");
+
+        return $stmt->execute([
+            ':avatar' => $avatarPath,
+            ':id'     => $userId,
+        ]);
+    }
+
+    /**
+     * Supprime un livre seulement s'il appartient à l'user.
+     * Retourne true si une ligne a été supprimée, sinon false.
+     */
     public function deleteBook(int $bookId, int $userId): bool
     {
-        $stmt = $this->pdo->prepare("DELETE FROM books WHERE id = :id AND user_id = :uid");
-        $stmt->execute(['id' => $bookId, 'uid' => $userId]);
+        $stmt = $this->pdo->prepare("
+            DELETE FROM books
+            WHERE id = :id AND user_id = :user_id
+        ");
+
+        $stmt->execute([
+            ':id'      => $bookId,
+            ':user_id' => $userId,
+        ]);
+
         return $stmt->rowCount() > 0;
     }
 }

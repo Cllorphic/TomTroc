@@ -99,7 +99,8 @@ $messageHref = "index.php?route=messaging&to=" . urlencode((string)$user['id']);
       </div>
 
       <?php if ($totalPages > 1): ?>
-        <nav class="library-pagination" style="margin-top:16px;">
+        <nav class="library-pagination public-account__pagination">
+
           <?php for ($i = 1; $i <= $totalPages; $i++): ?>
             <a
               class="library-pagination__link <?= (int)$i === (int)$page ? 'is-active' : '' ?>"
