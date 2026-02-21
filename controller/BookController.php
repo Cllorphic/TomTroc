@@ -1,171 +1,218 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../model/BookModel.php';
 
-// Controller : CRUD livres
 class BookController
 {
-    // Model livres
     private BookModel $model;
 
-    // Constructeur model
     public function __construct()
     {
         $pdo = Database::getConnection();
         $this->model = new BookModel($pdo);
     }
 
-    // Formulaire create
     public function create(): void
     {
+        $this->ensureAuth();
         require __DIR__ . '/../view/book/create.php';
     }
 
-    // Enregistre create
     public function store(): void
     {
+        $this->ensureAuth();
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header("Location: index.php?route=book-create");
+            header('Location: index.php?route=create');
             exit;
         }
-
-        $userId = (int)$_SESSION['user']['id'];
 
         $title = trim($_POST['title'] ?? '');
         $author = trim($_POST['author'] ?? '');
         $description = trim($_POST['description'] ?? '');
-        $isAvailable = (int)($_POST['is_available'] ?? 1);
+        $isAvailable = isset($_POST['is_available']) ? 1 : 0;
 
-        if ($title === '' || $author === '') {
-            $_SESSION['flash_error'] = "Titre et auteur obligatoires.";
-            header("Location: index.php?route=book-create");
+        if (!$this->validateBookData($title, $author, $description, $isAvailable)) {
+            $_SESSION['flash_error'] = 'Données du livre invalides.';
+            header('Location: index.php?route=create');
             exit;
         }
 
-        // Upload image (optionnel)
-        $imagePath = $this->handleBookImageUpload();
+        $image = $this->handleBookImageUpload();
 
-        $this->model->insert($userId, $title, $author, $description, $imagePath, $isAvailable);
+        $this->model->insert(
+            (int) $_SESSION['user']['id'],
+            $title,
+            $author,
+            $description,
+            $image,
+            $isAvailable
+        );
 
-        $_SESSION['flash_success'] = "Livre créé.";
-        header("Location: index.php?route=account");
+        header('Location: index.php?route=account');
         exit;
     }
 
-    // Formulaire edit
     public function edit(): void
     {
-        $userId = (int)$_SESSION['user']['id'];
-        $bookId = (int)($_GET['id'] ?? 0);
+        $this->ensureAuth();
+
+        $userId = (int) $_SESSION['user']['id'];
+        $bookId = (int) ($_GET['id'] ?? 0);
 
         $book = $this->model->findByIdForUser($bookId, $userId);
         if (!$book) {
-            $_SESSION['flash_error'] = "Livre introuvable.";
-            header("Location: index.php?route=account");
+            header('Location: index.php?route=account');
             exit;
         }
 
         require __DIR__ . '/../view/book/edit.php';
     }
 
-    // Enregistre edit
     public function update(): void
     {
+        $this->ensureAuth();
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header("Location: index.php?route=account");
+            header('Location: index.php?route=account');
             exit;
         }
 
-        $userId = (int)$_SESSION['user']['id'];
-        $bookId = (int)($_POST['id'] ?? 0);
+        $userId = (int) $_SESSION['user']['id'];
+        $bookId = (int) ($_GET['id'] ?? 0);
 
         $book = $this->model->findByIdForUser($bookId, $userId);
         if (!$book) {
-            $_SESSION['flash_error'] = "Action non autorisée.";
-            header("Location: index.php?route=account");
+            header('Location: index.php?route=account');
             exit;
         }
 
         $title = trim($_POST['title'] ?? '');
         $author = trim($_POST['author'] ?? '');
         $description = trim($_POST['description'] ?? '');
-        $isAvailable = (int)($_POST['is_available'] ?? 1);
+        $isAvailable = isset($_POST['is_available']) ? 1 : 0;
 
-        if ($title === '' || $author === '') {
-            $_SESSION['flash_error'] = "Titre et auteur obligatoires.";
-            header("Location: index.php?route=book-edit&id=" . $bookId);
+        if (!$this->validateBookData($title, $author, $description, $isAvailable)) {
+            $_SESSION['flash_error'] = 'Données du livre invalides.';
+            header('Location: index.php?route=edit&id=' . $bookId);
             exit;
         }
 
-        // Si nouvelle image uploadée -> remplace, sinon garde l’ancienne
+        $oldImage = $book['image'] ?? null;
         $newImage = $this->handleBookImageUpload();
-        $finalImage = $newImage ?: ($book['image'] ?? null);
+        $finalImage = $newImage ?: $oldImage;
 
-        $this->model->update($bookId, $userId, $title, $author, $description, $finalImage, $isAvailable);
+        $updated = $this->model->update(
+            $bookId,
+            $userId,
+            $title,
+            $author,
+            $description,
+            $finalImage,
+            $isAvailable
+        );
 
-        $_SESSION['flash_success'] = "Livre modifié.";
-        header("Location: index.php?route=account");
+        if ($updated && $newImage && $oldImage) {
+            $this->deleteUploadedFile($oldImage);
+        }
+
+        header('Location: index.php?route=account');
         exit;
     }
 
-    // Supprime un livre
     public function delete(): void
     {
-        $userId = (int)$_SESSION['user']['id'];
-        $bookId = (int)($_GET['id'] ?? 0);
+        $this->ensureAuth();
 
-        $ok = $this->model->delete($bookId, $userId);
+        $userId = (int) $_SESSION['user']['id'];
+        $bookId = (int) ($_GET['id'] ?? 0);
 
-        $_SESSION['flash_success'] = $ok ? "Livre supprimé." : "Action non autorisée.";
-        header("Location: index.php?route=account");
+        $book = $this->model->findByIdForUser($bookId, $userId);
+        if (!$book) {
+            header('Location: index.php?route=account');
+            exit;
+        }
+
+        $oldImage = $book['image'] ?? null;
+        $deleted = $this->model->delete($bookId, $userId);
+
+        if ($deleted && $oldImage) {
+            $this->deleteUploadedFile($oldImage);
+        }
+
+        header('Location: index.php?route=account');
         exit;
     }
 
-    // Upload image livre
+    private function validateBookData(
+        string $title,
+        string $author,
+        string $description,
+        int $isAvailable
+    ): bool {
+        if ($title === '' || mb_strlen($title) > 255) {
+            return false;
+        }
+
+        if ($author === '' || mb_strlen($author) > 255) {
+            return false;
+        }
+
+        if (mb_strlen($description) > 2000) {
+            return false;
+        }
+
+        return in_array($isAvailable, [0, 1], true);
+    }
+
     private function handleBookImageUpload(): ?string
     {
-        if (empty($_FILES['image']) || $_FILES['image']['error'] === UPLOAD_ERR_NO_FILE) {
+        if (
+            empty($_FILES['image']['name']) ||
+            ($_FILES['image']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK
+        ) {
             return null;
         }
 
-        if ($_FILES['image']['error'] !== UPLOAD_ERR_OK) {
-            $_SESSION['flash_error'] = "Upload image échoué.";
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        $fileType = (string) ($_FILES['image']['type'] ?? '');
+
+        if (!in_array($fileType, $allowedTypes, true)) {
             return null;
         }
 
-        if ($_FILES['image']['size'] > 90 * 1024 * 1024) {
-            $_SESSION['flash_error'] = "Image trop lourde (max 90 Mo).";
-            return null;
-        }
+        $extension = pathinfo((string) $_FILES['image']['name'], PATHINFO_EXTENSION);
+        $filename = uniqid('book_', true) . '.' . $extension;
+        $destination = __DIR__ . '/../public/uploads/books/' . $filename;
 
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mime = $finfo->file($_FILES['image']['tmp_name']);
-
-        $allowed = [
-            'image/jpeg' => 'jpg',
-            'image/png'  => 'png',
-            'image/webp' => 'webp',
-        ];
-
-        if (!isset($allowed[$mime])) {
-            $_SESSION['flash_error'] = "Format non autorisé (jpg/png/webp).";
-            return null;
-        }
-
-        $ext = $allowed[$mime];
-
-        $dir = __DIR__ . '/../public/uploads/books';
-        if (!is_dir($dir)) mkdir($dir, 0755, true);
-
-        $filename = 'book_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
-        $dest = $dir . '/' . $filename;
-
-        if (!move_uploaded_file($_FILES['image']['tmp_name'], $dest)) {
-            $_SESSION['flash_error'] = "Impossible de sauvegarder l’image.";
+        if (!move_uploaded_file((string) $_FILES['image']['tmp_name'], $destination)) {
             return null;
         }
 
         return 'public/uploads/books/' . $filename;
+    }
+
+    private function deleteUploadedFile(?string $relativePath): void
+    {
+        if (!$relativePath) {
+            return;
+        }
+
+        $fullPath = __DIR__ . '/../' . ltrim($relativePath, '/');
+
+        if (is_file($fullPath)) {
+            unlink($fullPath);
+        }
+    }
+
+    private function ensureAuth(): void
+    {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?route=login');
+            exit;
+        }
     }
 }

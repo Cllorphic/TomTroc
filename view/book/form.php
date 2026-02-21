@@ -8,7 +8,7 @@ $author = $book['author'] ?? '';
 $description = $book['description'] ?? '';
 $isAvailable = (!isset($book['is_available']) || (int)$book['is_available'] === 1);
 
-// URL image (évite 404)
+
 $imageUrl = '';
 if (!empty($image)) {
   if (str_starts_with($image, 'http://') || str_starts_with($image, 'https://') || str_starts_with($image, '/')) {
@@ -17,6 +17,9 @@ if (!empty($image)) {
     $imageUrl = BASE_URL . '/' . ltrim($image, '/');
   }
 }
+
+
+$isImageRequired = empty($imageUrl);
 ?>
 
 <div class="bookedit">
@@ -42,7 +45,12 @@ if (!empty($image)) {
           <?php endif; ?>
         </div>
 
-        <input class="bookedit__file" type="file" name="image" id="image" accept="image/*">
+        <input class="bookedit__file"
+               type="file"
+               name="image"
+               id="image"
+               accept="image/*"
+               <?= $isImageRequired ? 'required' : '' ?>>
 
         <button class="bookedit__link" type="button" onclick="document.getElementById('image').click()">
           Modifier la photo
@@ -63,7 +71,10 @@ if (!empty($image)) {
 
         <div class="bookedit__field">
           <label for="description">Commentaire</label>
-          <textarea id="description" name="description" rows="10"><?= htmlspecialchars($description) ?></textarea>
+          <textarea id="description"
+                    name="description"
+                    rows="10"
+                    required><?= htmlspecialchars($description) ?></textarea>
         </div>
 
         <div class="bookedit__field">
@@ -84,21 +95,25 @@ if (!empty($image)) {
 <script>
   // Preview image
   const input = document.getElementById('image');
-  const prevImg = document.getElementById('coverPreview');
+  let prev = document.getElementById('coverPreview');
 
-  if (input && prevImg) {
+  if (input && prev) {
     input.addEventListener('change', () => {
       const f = input.files && input.files[0];
       if (!f) return;
 
-      if (prevImg.tagName.toLowerCase() === 'img') {
-        prevImg.src = URL.createObjectURL(f);
-      } else {
+      const url = URL.createObjectURL(f);
+
+      // Si c'était un placeholder <div>, on le remplace par un <img>
+      if (prev.tagName.toLowerCase() !== 'img') {
         const img = document.createElement('img');
         img.id = 'coverPreview';
         img.alt = 'Couverture du livre';
-        img.src = URL.createObjectURL(f);
-        prevImg.replaceWith(img);
+        img.src = url;
+        prev.replaceWith(img);
+        prev = img;
+      } else {
+        prev.src = url;
       }
     });
   }
