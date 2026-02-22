@@ -1,3 +1,7 @@
+Lien du Github : https://github.com/Cllorphic/TomTroc
+
+
+
 Pour déployer le site, il faut créer un dossier config à la racine du projet, puis créer un fichier database.php à l’intérieur.
 
 Contenu du fichier database.php :
