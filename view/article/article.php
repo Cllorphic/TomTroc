@@ -1,13 +1,22 @@
 <?php
+
 $bodyClass = 'page-article';
 
 function assetUrl(?string $path): string
 {
-    if (!$path) return '';
-    if (str_starts_with($path, 'http') || str_starts_with($path, '/')) return $path;
+    if (!$path) {
+        return '';
+    }
+
+    if (str_starts_with($path, 'http') || str_starts_with($path, '/')) {
+        return $path;
+    }
 
     // Si tu as BASE_URL défini, il sera utilisé. Sinon on part de la racine.
-    if (defined('BASE_URL')) return BASE_URL . '/' . ltrim($path, '/');
+    if (defined('BASE_URL')) {
+        return BASE_URL . '/' . ltrim($path, '/');
+    }
+
     return '/' . ltrim($path, '/');
 }
 
@@ -21,7 +30,8 @@ if (!$avatarUrl) {
 }
 
 // lien vers profil user
-$userHref = "index.php?route=public-account&id=" . urlencode((string)($book['user_id'] ?? 0));
+$userHref = 'index.php?route=public-account&id=' . urlencode((string) ($book['user_id'] ?? 0));
+
 ?>
 
 <?php require_once __DIR__ . '/../layout/header.php'; ?>
@@ -31,9 +41,9 @@ $userHref = "index.php?route=public-account&id=" . urlencode((string)($book['use
 
     <!-- Gauche -->
     <div class="article__left">
-      <?php if ($imgUrl): ?>
+      <?php if ($imgUrl) : ?>
         <img class="article__img" src="<?= htmlspecialchars($imgUrl) ?>" alt="<?= htmlspecialchars($book['title'] ?? '') ?>">
-      <?php else: ?>
+      <?php else : ?>
         <div class="article__img" aria-hidden="true"></div>
       <?php endif; ?>
     </div>
@@ -51,10 +61,9 @@ $userHref = "index.php?route=public-account&id=" . urlencode((string)($book['use
         <?= nl2br(htmlspecialchars($book['description'] ?? '')) ?>
       </div>
 
-       <div class="article__label article__label--spaced">Propriétaire</div>
+      <div class="article__label article__label--spaced">Propriétaire</div>
 
-      
-      <a class="article__ownerCard article__ownerCard--link"  href="<?= htmlspecialchars($userHref) ?>">
+      <a class="article__ownerCard article__ownerCard--link" href="<?= htmlspecialchars($userHref) ?>">
 
         <div class="article__ownerAvatar">
           <img src="<?= htmlspecialchars($avatarUrl) ?>" alt="">
@@ -65,11 +74,12 @@ $userHref = "index.php?route=public-account&id=" . urlencode((string)($book['use
       </a>
 
       <!-- CTA -->
-      <a class="article__cta"
-   href="index.php?route=messaging&to=<?= urlencode((string)($book['user_id'] ?? 0)) ?>">
-  Envoyer un message
-</a>
-
+      <a
+        class="article__cta"
+        href="index.php?route=messaging&to=<?= urlencode((string) ($book['user_id'] ?? 0)) ?>"
+      >
+        Envoyer un message
+      </a>
 
     </div>
 

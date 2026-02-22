@@ -1,12 +1,13 @@
 <?php
+
 $titlePage = 'Ajouter un livre';
 $action = 'index.php?route=book-store';
 $submitLabel = 'Créer';
 $book = [];
+
+require __DIR__ . '/../layout/header.php';
+
 ?>
-
-<?php require __DIR__ . '/../layout/header.php'; ?>
-
 
 <main class="account">
   <div class="container">

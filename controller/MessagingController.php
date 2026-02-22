@@ -16,26 +16,26 @@ class MessagingController
     private function currentUserId(): int
     {
         // On ne touche pas AuthController : on utilise la session existante
-        return (int)($_SESSION['user']['id'] ?? 0);
+        return (int) ($_SESSION['user']['id'] ?? 0);
     }
 
     public function index(): void
     {
         $me = $this->currentUserId();
+
         if ($me <= 0) {
-            header("Location: index.php?route=login");
+            header('Location: index.php?route=login');
             exit;
         }
 
-        $to = (int)($_GET['to'] ?? 0);
-        $conversationId = (int)($_GET['c'] ?? 0);
+        $to = (int) ($_GET['to'] ?? 0);
+        $conversationId = (int) ($_GET['c'] ?? 0);
 
         // Arrivée depuis "Envoyer un message"
         if ($to > 0) {
-
             // ✅ Empêche de créer une conversation avec soi-même : on ne fait rien
             if ($to === $me) {
-                header("Location: index.php?route=messaging");
+                header('Location: index.php?route=messaging');
                 exit;
             }
 
@@ -43,11 +43,11 @@ class MessagingController
             try {
                 $conversationId = $this->model->getOrCreateConversation($me, $to);
             } catch (RuntimeException $e) {
-                header("Location: index.php?route=messaging");
+                header('Location: index.php?route=messaging');
                 exit;
             }
 
-            header("Location: index.php?route=messaging&c=" . urlencode((string)$conversationId));
+            header('Location: index.php?route=messaging&c=' . urlencode((string) $conversationId));
             exit;
         }
 
@@ -55,22 +55,24 @@ class MessagingController
 
         // Ouvre la première conversation si aucune sélectionnée
         if ($conversationId <= 0 && !empty($conversations)) {
-            $conversationId = (int)$conversations[0]['conversation_id'];
+            $conversationId = (int) $conversations[0]['conversation_id'];
         }
 
         $messages = [];
+
         if ($conversationId > 0) {
             if (!$this->model->userIsInConversation($me, $conversationId)) {
                 http_response_code(403);
-                echo "Accès interdit.";
+                echo 'Accès interdit.';
                 return;
             }
+
             $messages = $this->model->getMessages($conversationId);
             $this->model->markReadForUser($conversationId, $me);
         }
 
-        $title = "Messagerie";
-        $bodyClass = "page-messaging";
+        $title = 'Messagerie';
+        $bodyClass = 'page-messaging';
 
         require __DIR__ . '/../view/messaging/messaging.php';
     }
@@ -78,29 +80,30 @@ class MessagingController
     public function send(): void
     {
         $me = $this->currentUserId();
+
         if ($me <= 0) {
-            header("Location: index.php?route=login");
+            header('Location: index.php?route=login');
             exit;
         }
 
-        $conversationId = (int)($_POST['conversation_id'] ?? 0);
-        $body = (string)($_POST['body'] ?? '');
+        $conversationId = (int) ($_POST['conversation_id'] ?? 0);
+        $body = (string) ($_POST['body'] ?? '');
 
         if ($conversationId <= 0) {
             http_response_code(400);
-            echo "Conversation invalide.";
+            echo 'Conversation invalide.';
             return;
         }
 
         if (!$this->model->userIsInConversation($me, $conversationId)) {
             http_response_code(403);
-            echo "Accès interdit.";
+            echo 'Accès interdit.';
             return;
         }
 
         $this->model->sendMessage($conversationId, $me, $body);
 
-        header("Location: index.php?route=messaging&c=" . urlencode((string)$conversationId));
+        header('Location: index.php?route=messaging&c=' . urlencode((string) $conversationId));
         exit;
     }
 }

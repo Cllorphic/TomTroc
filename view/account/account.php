@@ -13,12 +13,15 @@ if (!function_exists('assetPath')) {
         if (!$path) {
             return '';
         }
+
         if (str_starts_with($path, 'http') || str_starts_with($path, '/')) {
             return $path;
         }
+
         if (defined('BASE_URL')) {
             return rtrim((string) BASE_URL, '/') . '/' . ltrim($path, '/');
         }
+
         return $path;
     }
 }
@@ -58,7 +61,9 @@ $booksCountValue = (int) (
 $defaultAvatar = defined('ASSET_URL')
     ? rtrim((string) ASSET_URL, '/') . '/img/default-avatar.svg'
     : '';
+
 $avatarSrc = $avatarValue !== '' ? assetPath($avatarValue) : $defaultAvatar;
+
 ?>
 
 <main class="account" id="main-content">
@@ -170,8 +175,8 @@ $avatarSrc = $avatarValue !== '' ? assetPath($avatarValue) : $defaultAvatar;
         <?php if (!empty($books)) : ?>
           <?php foreach ($books as $book) : ?>
             <?php
-              $bookImage = assetPath((string) ($book['image'] ?? ''));
-              $bookId = (int) ($book['id'] ?? 0);
+            $bookImage = assetPath((string) ($book['image'] ?? ''));
+            $bookId = (int) ($book['id'] ?? 0);
             ?>
             <div class="account-books__row">
               <div class="account-books__photo">

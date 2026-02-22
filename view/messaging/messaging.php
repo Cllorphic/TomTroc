@@ -12,14 +12,14 @@
         <?php else : ?>
           <?php foreach ($conversations as $conv) : ?>
             <?php
-              $cid = (int) $conv['conversation_id'];
-              $href = 'index.php?route=messaging&c=' . urlencode((string) $cid);
+            $cid = (int) $conv['conversation_id'];
+            $href = 'index.php?route=messaging&c=' . urlencode((string) $cid);
 
-              $isActive = ($cid === (int) ($conversationId ?? 0));
-              $name = $conv['other_username'] ?? 'Utilisateur';
-              $snippet = $conv['last_body'] ?? '';
-              $time = !empty($conv['last_at']) ? date('H:i', strtotime($conv['last_at'])) : '';
-              $unread = (int) ($conv['unread_count'] ?? 0);
+            $isActive = ($cid === (int) ($conversationId ?? 0));
+            $name = $conv['other_username'] ?? 'Utilisateur';
+            $snippet = $conv['last_body'] ?? '';
+            $time = !empty($conv['last_at']) ? date('H:i', strtotime($conv['last_at'])) : '';
+            $unread = (int) ($conv['unread_count'] ?? 0);
             ?>
 
             <a
@@ -56,15 +56,16 @@
     <div class="messagerie__main">
       <?php if (!empty($conversationId)) : ?>
         <?php
-          $activeConv = null;
-          foreach ($conversations as $conv) {
-              if ((int) $conv['conversation_id'] === (int) $conversationId) {
-                  $activeConv = $conv;
-                  break;
-              }
-          }
-          $otherName = $activeConv['other_username'] ?? 'Utilisateur';
-          $otherAvatar = $activeConv['other_avatar'] ?? '';
+        $activeConv = null;
+        foreach ($conversations as $conv) {
+            if ((int) $conv['conversation_id'] === (int) $conversationId) {
+                $activeConv = $conv;
+                break;
+            }
+        }
+
+        $otherName = $activeConv['other_username'] ?? 'Utilisateur';
+        $otherAvatar = $activeConv['other_avatar'] ?? '';
         ?>
 
         <div class="messagerie__header">
@@ -85,8 +86,8 @@
         <?php else : ?>
           <?php foreach ($messages as $m) : ?>
             <?php
-              $mine = ((int) $m['sender_id'] === (int) $me);
-              $date = !empty($m['created_at']) ? date('d.m H:i', strtotime($m['created_at'])) : '';
+            $mine = ((int) $m['sender_id'] === (int) $me);
+            $date = !empty($m['created_at']) ? date('d.m H:i', strtotime($m['created_at'])) : '';
             ?>
             <div class="messagerie__msg <?= $mine ? 'is-mine' : 'is-their' ?>">
               <div class="messagerie__msgTime"><?= htmlspecialchars($date) ?></div>

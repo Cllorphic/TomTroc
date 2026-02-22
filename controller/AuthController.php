@@ -10,6 +10,7 @@ class AuthController
     {
         $errors = $_SESSION['errors'] ?? [];
         $old = $_SESSION['old'] ?? [];
+
         unset($_SESSION['errors'], $_SESSION['old']);
 
         require __DIR__ . '/../view/auth/login.php';
@@ -23,18 +24,18 @@ class AuthController
 
         // Vérif
         if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $password === '') {
-            $_SESSION['errors'] = ["Email ou mot de passe invalide."];
+            $_SESSION['errors'] = ['Email ou mot de passe invalide.'];
             $_SESSION['old'] = ['email' => $email];
-            header("Location: index.php?route=login");
+            header('Location: index.php?route=login');
             exit;
         }
 
         $user = UserModel::findByEmail($email);
 
         if (!$user || !password_verify($password, $user['password_hash'])) {
-            $_SESSION['errors'] = ["Identifiants incorrects."];
+            $_SESSION['errors'] = ['Identifiants incorrects.'];
             $_SESSION['old'] = ['email' => $email];
-            header("Location: index.php?route=login");
+            header('Location: index.php?route=login');
             exit;
         }
 
@@ -47,9 +48,8 @@ class AuthController
             'avatar' => $user['avatar'],
         ];
 
-        header("Location: index.php?page=account");
+        header('Location: index.php?page=account');
         exit;
-
     }
 
     /** Afficher le formulaire register */
@@ -57,6 +57,7 @@ class AuthController
     {
         $errors = $_SESSION['errors'] ?? [];
         $old = $_SESSION['old'] ?? [];
+
         unset($_SESSION['errors'], $_SESSION['old']);
 
         require __DIR__ . '/../view/auth/register.php';
@@ -71,16 +72,22 @@ class AuthController
 
         // Vérif
         if ($username === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || $password === '') {
-            $_SESSION['errors'] = ["Champs invalides."];
-            $_SESSION['old'] = ['username' => $username, 'email' => $email];
-            header("Location: index.php?route=register");
+            $_SESSION['errors'] = ['Champs invalides.'];
+            $_SESSION['old'] = [
+                'username' => $username,
+                'email' => $email,
+            ];
+            header('Location: index.php?route=register');
             exit;
         }
 
         if (UserModel::emailExists($email)) {
-            $_SESSION['errors'] = ["Cet email est déjà utilisé."];
-            $_SESSION['old'] = ['username' => $username, 'email' => $email];
-            header("Location: index.php?route=register");
+            $_SESSION['errors'] = ['Cet email est déjà utilisé.'];
+            $_SESSION['old'] = [
+                'username' => $username,
+                'email' => $email,
+            ];
+            header('Location: index.php?route=register');
             exit;
         }
 
@@ -88,7 +95,7 @@ class AuthController
 
         UserModel::create($username, $email, $hash);
 
-        header("Location: index.php?route=login");
+        header('Location: index.php?route=login');
         exit;
     }
 
@@ -98,7 +105,7 @@ class AuthController
         unset($_SESSION['user']);
         session_regenerate_id(true);
 
-        header("Location: index.php?route=login");
+        header('Location: index.php?route=login');
         exit;
     }
 }

@@ -16,7 +16,7 @@ $unreadCount = 0;
 
 // Badge non-lus (si connecté)
 if ($isLoggedIn) {
-    $me = (int)($_SESSION['user']['id'] ?? 0);
+    $me = (int) ($_SESSION['user']['id'] ?? 0);
 
     if ($me > 0) {
         $dbPaths = [
@@ -49,7 +49,7 @@ if ($isLoggedIn) {
             try {
                 $pdo = Database::getConnection();
                 $messagingModel = new MessagingModel($pdo);
-                $unreadCount = (int)$messagingModel->countUnreadForUser($me);
+                $unreadCount = (int) $messagingModel->countUnreadForUser($me);
             } catch (Throwable $e) {
                 $unreadCount = 0;
             }
@@ -58,6 +58,7 @@ if ($isLoggedIn) {
 }
 
 ?>
+
 <!doctype html>
 <html lang="fr">
 <head>
@@ -74,7 +75,6 @@ if ($isLoggedIn) {
 </head>
 
 <body class="<?= htmlspecialchars((string) $bodyClass, ENT_QUOTES) ?>">
-  
 
   <header class="topbar">
     <div class="topbar__inner">

@@ -1,4 +1,5 @@
 <?php
+
 // Body class pour activer le CSS body.page-home ...
 $bodyClass = 'page-home';
 $title = 'Accueil - TomTroc';
@@ -6,9 +7,10 @@ $title = 'Accueil - TomTroc';
 $latestBooks = $latestBooks ?? [];
 
 // Images home (selon ton besoin : imgHome1 en haut, HomeImg2 en bas)
-$heroImg   = BASE_URL . '/public/img/uploads/home_image/imgHome1.jpg';
+$heroImg = BASE_URL . '/public/img/uploads/home_image/imgHome1.jpg';
 $valuesImg = BASE_URL . '/public/img/uploads/home_image/HomeImg2.jpg';
-$vector    = BASE_URL . '/public/img/uploads/icones/Vector.svg';
+$vector = BASE_URL . '/public/img/uploads/icones/Vector.svg';
+
 ?>
 
 <?php require __DIR__ . '/../layout/header.php'; ?>
@@ -40,27 +42,26 @@ $vector    = BASE_URL . '/public/img/uploads/icones/Vector.svg';
       <h2 class="home-section__title">Les derniers livres ajoutés</h2>
 
       <div class="home-grid">
-        <?php foreach ($latestBooks as $b): ?>
+        <?php foreach ($latestBooks as $b) : ?>
           <?php
-            $img = $b['image'] ?? '';
-            $imgUrl = $img
+          $img = $b['image'] ?? '';
+          $imgUrl = $img
               ? (str_starts_with($img, 'http') || str_starts_with($img, '/')
                   ? $img
                   : BASE_URL . '/' . ltrim($img, '/'))
               : '';
 
-            
-            $bookId = $b['id'] ?? $b['book_id'] ?? null;
-            $href = $bookId ? "index.php?route=article&id=" . urlencode((string)$bookId) : "#";
+          $bookId = $b['id'] ?? $b['book_id'] ?? null;
+          $href = $bookId ? 'index.php?route=article&id=' . urlencode((string) $bookId) : '#';
           ?>
 
           <article class="home-card">
-            
+
             <a href="<?= htmlspecialchars($href) ?>" class="home-card__link">
               <div class="home-card__imgwrap">
-                <?php if ($imgUrl): ?>
+                <?php if ($imgUrl) : ?>
                   <img class="home-card__img" src="<?= htmlspecialchars($imgUrl) ?>" alt="">
-                <?php else: ?>
+                <?php else : ?>
                   <div class="home-card__ph"></div>
                 <?php endif; ?>
               </div>

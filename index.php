@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 define('BASE_URL', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'));
@@ -12,14 +13,9 @@ require_once __DIR__ . '/controller/LibraryController.php';
 require_once __DIR__ . '/controller/PublicAccountController.php';
 require_once __DIR__ . '/controller/MessagingController.php';
 
-
-
-
-
 $route = $_GET['route'] ?? ($_GET['page'] ?? 'login');
 
 switch ($route) {
-
     case 'login':
         $controller = new AuthController();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -44,15 +40,15 @@ switch ($route) {
 
     case 'dashboard':
         if (empty($_SESSION['user'])) {
-            header("Location: index.php?route=login");
+            header('Location: index.php?route=login');
             exit;
         }
-        echo "Bienvenue " . htmlspecialchars($_SESSION['user']['username'] ?? '');
+        echo 'Bienvenue ' . htmlspecialchars($_SESSION['user']['username'] ?? '');
         break;
 
     case 'account':
         if (empty($_SESSION['user'])) {
-            header("Location: index.php?route=login");
+            header('Location: index.php?route=login');
             exit;
         }
         (new AccountController())->show();
@@ -60,7 +56,7 @@ switch ($route) {
 
     case 'account-update':
         if (empty($_SESSION['user'])) {
-            header("Location: index.php?route=login");
+            header('Location: index.php?route=login');
             exit;
         }
         (new AccountController())->updateInfos();
@@ -68,7 +64,7 @@ switch ($route) {
 
     case 'account-avatar-update':
         if (empty($_SESSION['user'])) {
-            header("Location: index.php?route=login");
+            header('Location: index.php?route=login');
             exit;
         }
         (new AccountController())->updateAvatar();
@@ -76,76 +72,91 @@ switch ($route) {
 
     case 'book-delete':
         if (empty($_SESSION['user'])) {
-            header("Location: index.php?route=login");
+            header('Location: index.php?route=login');
             exit;
         }
         (new AccountController())->deleteBook();
         break;
 
-        case 'book-create':
-    if (empty($_SESSION['user'])) { header("Location: index.php?route=login"); exit; }
-    (new BookController())->create();
-    break;
+    case 'book-create':
+        if (empty($_SESSION['user'])) {
+            header('Location: index.php?route=login');
+            exit;
+        }
+        (new BookController())->create();
+        break;
 
-case 'book-store':
-    if (empty($_SESSION['user'])) { header("Location: index.php?route=login"); exit; }
-    (new BookController())->store();
-    break;
+    case 'book-store':
+        if (empty($_SESSION['user'])) {
+            header('Location: index.php?route=login');
+            exit;
+        }
+        (new BookController())->store();
+        break;
 
-case 'book-edit':
-    if (empty($_SESSION['user'])) { header("Location: index.php?route=login"); exit; }
-    (new BookController())->edit();
-    break;
+    case 'book-edit':
+        if (empty($_SESSION['user'])) {
+            header('Location: index.php?route=login');
+            exit;
+        }
+        (new BookController())->edit();
+        break;
 
-case 'book-update':
-    if (empty($_SESSION['user'])) { header("Location: index.php?route=login"); exit; }
-    (new BookController())->update();
-    break;
+    case 'book-update':
+        if (empty($_SESSION['user'])) {
+            header('Location: index.php?route=login');
+            exit;
+        }
+        (new BookController())->update();
+        break;
 
-case 'book-delete':
-    if (empty($_SESSION['user'])) { header("Location: index.php?route=login"); exit; }
-    (new BookController())->delete();
-    break;
+    case 'book-delete':
+        if (empty($_SESSION['user'])) {
+            header('Location: index.php?route=login');
+            exit;
+        }
+        (new BookController())->delete();
+        break;
 
     case 'home':
-  (new HomeController())->show();
-  break;
+        (new HomeController())->show();
+        break;
 
-  case 'books':
-    (new LibraryController())->index();
-    break;
+    case 'books':
+        (new LibraryController())->index();
+        break;
 
     case 'article':
-    require_once __DIR__ . '/controller/ArticleController.php';
-    (new ArticleController())->show();
-    break;
+        require_once __DIR__ . '/controller/ArticleController.php';
+        (new ArticleController())->show();
+        break;
 
     case 'public-account':
-    (new PublicAccountController())->show();
-    break;
+        (new PublicAccountController())->show();
+        break;
 
     case 'messaging':
-    if (empty($_SESSION['user'])) {
-        header("Location: index.php?route=login");
-        exit;
-    }
-    require_once __DIR__ . '/controller/MessagingController.php';
-    (new MessagingController())->index();
-    break;
+        if (empty($_SESSION['user'])) {
+            header('Location: index.php?route=login');
+            exit;
+        }
+        require_once __DIR__ . '/controller/MessagingController.php';
+        (new MessagingController())->index();
+        break;
 
-case 'messaging-send':
-    if (empty($_SESSION['user'])) {
-        header("Location: index.php?route=login");
-        exit;
-    }
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        http_response_code(405);
-        echo "Méthode non autorisée.";
-        exit;
-    }
-    require_once __DIR__ . '/controller/MessagingController.php';
-    (new MessagingController())->send();
-    break;
+    case 'messaging-send':
+        if (empty($_SESSION['user'])) {
+            header('Location: index.php?route=login');
+            exit;
+        }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo 'Méthode non autorisée.';
+            exit;
+        }
+        require_once __DIR__ . '/controller/MessagingController.php';
+        (new MessagingController())->send();
+        break;
 
     default:
         http_response_code(404);

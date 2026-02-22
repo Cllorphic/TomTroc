@@ -1,7 +1,10 @@
 <?php
+
 $title = 'Inscription';
 $bodyClass = 'page-auth';
+
 require __DIR__ . '/../layout/header.php';
+
 ?>
 
 <div class="auth">
@@ -9,7 +12,7 @@ require __DIR__ . '/../layout/header.php';
     <section class="auth__panel">
       <h1 class="auth__title">Inscription</h1>
 
-      <?php if (!empty($errors)): ?>
+      <?php if (!empty($errors)) : ?>
         <p class="alert"><?= htmlspecialchars($errors[0]) ?></p>
       <?php endif; ?>
 
@@ -38,14 +41,22 @@ require __DIR__ . '/../layout/header.php';
 
         <div class="field">
           <label for="password">Mot de passe</label>
-          <input id="password" type="password" name="password" required>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            required
+          >
         </div>
 
-        <button class="btn btn--primary" type="submit">S’inscrire</button>
+        <button class="btn btn--primary" type="submit">
+          S’inscrire
+        </button>
       </form>
 
       <p class="auth__hint">
-        Déjà un compte ? <a href="index.php?route=login">Connectez-vous</a>
+        Déjà un compte ?
+        <a href="index.php?route=login">Connectez-vous</a>
       </p>
     </section>
 

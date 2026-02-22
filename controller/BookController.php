@@ -18,6 +18,7 @@ class BookController
     public function create(): void
     {
         $this->ensureAuth();
+
         require __DIR__ . '/../view/book/create.php';
     }
 
@@ -171,8 +172,8 @@ class BookController
     private function handleBookImageUpload(): ?string
     {
         if (
-            empty($_FILES['image']['name']) ||
-            ($_FILES['image']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK
+            empty($_FILES['image']['name'])
+            || ($_FILES['image']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK
         ) {
             return null;
         }

@@ -1,6 +1,7 @@
 <?php
+
 $bodyClass = $bodyClass ?? 'page-public-account';
-$title = $title ?? "Compte public - TomTroc";
+$title = $title ?? 'Compte public - TomTroc';
 
 $user = $user ?? null;
 $books = $books ?? [];
@@ -10,8 +11,14 @@ $totalPages = $totalPages ?? 1;
 
 function imgUrl(?string $img): string
 {
-    if (!$img) return '';
-    if (str_starts_with($img, 'http') || str_starts_with($img, '/')) return $img;
+    if (!$img) {
+        return '';
+    }
+
+    if (str_starts_with($img, 'http') || str_starts_with($img, '/')) {
+        return $img;
+    }
+
     return BASE_URL . '/' . ltrim($img, '/');
 }
 
@@ -19,8 +26,9 @@ $avatar = imgUrl($user['avatar'] ?? '');
 $username = $user['username'] ?? 'Utilisateur';
 $memberSince = !empty($user['created_at']) ? date('d/m/Y', strtotime($user['created_at'])) : null;
 
-//lien pour “écrire un message”
-$messageHref = "index.php?route=messaging&to=" . urlencode((string)$user['id']);
+// lien pour “écrire un message”
+$messageHref = 'index.php?route=messaging&to=' . urlencode((string) $user['id']);
+
 ?>
 
 <?php require __DIR__ . '/../layout/header.php'; ?>
@@ -31,16 +39,16 @@ $messageHref = "index.php?route=messaging&to=" . urlencode((string)$user['id']);
     <!-- Colonne gauche -->
     <aside class="public-account__card">
       <div class="public-account__avatar">
-        <?php if ($avatar): ?>
+        <?php if ($avatar) : ?>
           <img src="<?= htmlspecialchars($avatar) ?>" alt="">
-        <?php else: ?>
+        <?php else : ?>
           <div class="public-account__avatar-ph"></div>
         <?php endif; ?>
       </div>
 
       <h1 class="public-account__name"><?= htmlspecialchars($username) ?></h1>
 
-      <?php if ($memberSince): ?>
+      <?php if ($memberSince) : ?>
         <div class="public-account__meta">Membre depuis <?= htmlspecialchars($memberSince) ?></div>
       <?php endif; ?>
 
@@ -49,9 +57,8 @@ $messageHref = "index.php?route=messaging&to=" . urlencode((string)$user['id']);
       <div class="public-account__stat">
         <div class="public-account__stat-label">Bibliothèque</div>
         <div class="public-account__stat-value">
-  <?= (int)$total ?> <?= ((int)$total === 1) ? 'livre' : 'livres' ?>
-</div>
-
+          <?= (int) $total ?> <?= ((int) $total === 1) ? 'livre' : 'livres' ?>
+        </div>
       </div>
 
       <a class="btn btn--primary" href="<?= htmlspecialchars($messageHref) ?>">
@@ -70,19 +77,19 @@ $messageHref = "index.php?route=messaging&to=" . urlencode((string)$user['id']);
           <div>Description</div>
         </div>
 
-        <?php foreach ($books as $b): ?>
+        <?php foreach ($books as $b) : ?>
           <?php
-            $img = imgUrl($b['image'] ?? null);
-            $bookHref = "index.php?route=article&id=" . urlencode((string)$b['id']);
-            $desc = trim((string)($b['description'] ?? ''));
-            $descShort = mb_strlen($desc) > 120 ? (mb_substr($desc, 0, 120) . '…') : $desc;
+          $img = imgUrl($b['image'] ?? null);
+          $bookHref = 'index.php?route=article&id=' . urlencode((string) $b['id']);
+          $desc = trim((string) ($b['description'] ?? ''));
+          $descShort = mb_strlen($desc) > 120 ? (mb_substr($desc, 0, 120) . '…') : $desc;
           ?>
 
           <a class="public-account__row" href="<?= htmlspecialchars($bookHref) ?>">
             <div class="public-account__cell">
-              <?php if ($img): ?>
+              <?php if ($img) : ?>
                 <img class="public-account__bookimg" src="<?= htmlspecialchars($img) ?>" alt="">
-              <?php else: ?>
+              <?php else : ?>
                 <div class="public-account__bookimg-ph"></div>
               <?php endif; ?>
             </div>
@@ -93,18 +100,18 @@ $messageHref = "index.php?route=messaging&to=" . urlencode((string)$user['id']);
           </a>
         <?php endforeach; ?>
 
-        <?php if (empty($books)): ?>
+        <?php if (empty($books)) : ?>
           <div class="public-account__empty">Aucun livre publié pour le moment.</div>
         <?php endif; ?>
       </div>
 
-      <?php if ($totalPages > 1): ?>
+      <?php if ($totalPages > 1) : ?>
         <nav class="library-pagination public-account__pagination">
 
-          <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+          <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
             <a
-              class="library-pagination__link <?= (int)$i === (int)$page ? 'is-active' : '' ?>"
-              href="index.php?route=public-account&id=<?= urlencode((string)$user['id']) ?>&p=<?= $i ?>"
+              class="library-pagination__link <?= (int) $i === (int) $page ? 'is-active' : '' ?>"
+              href="index.php?route=public-account&id=<?= urlencode((string) $user['id']) ?>&p=<?= $i ?>"
             >
               <?= $i ?>
             </a>

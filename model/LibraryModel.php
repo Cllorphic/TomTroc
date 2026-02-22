@@ -17,15 +17,18 @@ class LibraryModel
     {
         [$where, $params] = $this->buildWhere($filters);
 
-        $stmt = $this->pdo->prepare("
+        $stmt = $this->pdo->prepare(
+            "
             SELECT COUNT(*) AS c
             FROM books b
             JOIN users u ON u.id = b.user_id
             $where
-        ");
+            "
+        );
+
         $stmt->execute($params);
 
-        return (int)($stmt->fetch(PDO::FETCH_ASSOC)['c'] ?? 0);
+        return (int) ($stmt->fetch(PDO::FETCH_ASSOC)['c'] ?? 0);
     }
 
     // Liste paginée
@@ -36,7 +39,8 @@ class LibraryModel
 
         [$where, $params] = $this->buildWhere($filters);
 
-        $stmt = $this->pdo->prepare("
+        $stmt = $this->pdo->prepare(
+            "
             SELECT
                 b.id,
                 b.user_id,
@@ -52,7 +56,9 @@ class LibraryModel
             $where
             ORDER BY b.created_at DESC, b.id DESC
             LIMIT $limit OFFSET $offset
-        ");
+            "
+        );
+
         $stmt->execute($params);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
@@ -64,13 +70,14 @@ class LibraryModel
         $where = [];
         $params = [];
 
-        $q = trim((string)($filters['q'] ?? ''));
+        $q = trim((string) ($filters['q'] ?? ''));
         if ($q !== '') {
-            $where[] = "(b.title LIKE :q OR b.author LIKE :q)";
+            $where[] = '(b.title LIKE :q OR b.author LIKE :q)';
             $params['q'] = '%' . $q . '%';
         }
 
         $sqlWhere = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
+
         return [$sqlWhere, $params];
     }
 }
