@@ -34,7 +34,7 @@ class BookController
         $title = trim($_POST['title'] ?? '');
         $author = trim($_POST['author'] ?? '');
         $description = trim($_POST['description'] ?? '');
-        $isAvailable = isset($_POST['is_available']) ? 1 : 0;
+        $isAvailable = (int) ($_POST['is_available'] ?? 0);
 
         if (!$this->validateBookData($title, $author, $description, $isAvailable)) {
             $_SESSION['flash_error'] = 'Données du livre invalides.';
@@ -94,7 +94,7 @@ class BookController
         $title = trim($_POST['title'] ?? '');
         $author = trim($_POST['author'] ?? '');
         $description = trim($_POST['description'] ?? '');
-        $isAvailable = isset($_POST['is_available']) ? 1 : 0;
+        $isAvailable = (int) ($_POST['is_available'] ?? 0);
 
         if (!$this->validateBookData($title, $author, $description, $isAvailable)) {
             $_SESSION['flash_error'] = 'Données du livre invalides.';

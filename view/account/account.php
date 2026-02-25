@@ -7,6 +7,9 @@ $bodyClass = 'page-account';
 
 require __DIR__ . '/../layout/header.php';
 
+/**
+ * Asset helper
+ */
 if (!function_exists('assetPath')) {
     function assetPath(?string $path): string
     {
@@ -26,6 +29,9 @@ if (!function_exists('assetPath')) {
     }
 }
 
+/**
+ * User values
+ */
 $usernameValue = (string) (
     $user['username']
     ?? $username
@@ -51,18 +57,27 @@ $memberSinceLabel = (string) (
     ?? ''
 );
 
+/**
+ * Books
+ */
 $books = $books ?? [];
+
 $booksCountValue = (int) (
     $user['books_count']
     ?? $booksCount
     ?? (is_array($books) ? count($books) : 0)
 );
 
+/**
+ * Avatar
+ */
 $defaultAvatar = defined('ASSET_URL')
     ? rtrim((string) ASSET_URL, '/') . '/img/default-avatar.svg'
     : '';
 
-$avatarSrc = $avatarValue !== '' ? assetPath($avatarValue) : $defaultAvatar;
+$avatarSrc = $avatarValue !== ''
+    ? assetPath($avatarValue)
+    : $defaultAvatar;
 
 ?>
 
@@ -107,7 +122,7 @@ $avatarSrc = $avatarValue !== '' ? assetPath($avatarValue) : $defaultAvatar;
           </div>
 
           <div class="account-profile__library">
-            <div class="account-profile__label">BIBLIOTHEQUE</div>
+            <div class="account-profile__label">BIBLIOTHÈQUE</div>
             <div class="account-profile__count">
               <span class="account-profile__bookicon" aria-hidden="true"></span>
               <?= $booksCountValue ?> livres
@@ -119,7 +134,11 @@ $avatarSrc = $avatarValue !== '' ? assetPath($avatarValue) : $defaultAvatar;
       <article class="account-card account-card--infos">
         <h2 class="account-infos__title">Vos informations personnelles</h2>
 
-        <form class="account-form" method="POST" action="index.php?route=account-update">
+        <form
+          class="account-form"
+          method="POST"
+          action="index.php?route=account-update"
+        >
           <div class="account-field">
             <label for="email">Adresse email</label>
             <input
@@ -152,13 +171,17 @@ $avatarSrc = $avatarValue !== '' ? assetPath($avatarValue) : $defaultAvatar;
             >
           </div>
 
-          <button class="account-save" type="submit">Enregistrer</button>
+          <button class="account-save" type="submit">
+            Enregistrer
+          </button>
         </form>
       </article>
     </section>
 
     <div class="account-actions">
-      <a class="account-add" href="index.php?route=book-create">+ Ajouter un livre</a>
+      <a class="account-add" href="index.php?route=book-create">
+        + Ajouter un livre
+      </a>
     </div>
 
     <section class="account-books">
@@ -168,16 +191,18 @@ $avatarSrc = $avatarValue !== '' ? assetPath($avatarValue) : $defaultAvatar;
           <div>TITRE</div>
           <div>AUTEUR</div>
           <div>DESCRIPTION</div>
-          <div>DISPONIBILITE</div>
+          <div>DISPONIBILITÉ</div>
           <div>ACTION</div>
         </div>
 
         <?php if (!empty($books)) : ?>
           <?php foreach ($books as $book) : ?>
             <?php
-            $bookImage = assetPath((string) ($book['image'] ?? ''));
-            $bookId = (int) ($book['id'] ?? 0);
+              $bookId = (int) ($book['id'] ?? 0);
+              $bookImage = assetPath((string) ($book['image'] ?? ''));
+              $isAvailable = (int) ($book['is_available'] ?? 0) === 1;
             ?>
+
             <div class="account-books__row">
               <div class="account-books__photo">
                 <img
@@ -199,7 +224,7 @@ $avatarSrc = $avatarValue !== '' ? assetPath($avatarValue) : $defaultAvatar;
               </div>
 
               <div class="account-books__status">
-                <?php if (!empty($book['is_available'])) : ?>
+                <?php if ($isAvailable) : ?>
                   <span class="tag tag--available">disponible</span>
                 <?php else : ?>
                   <span class="tag tag--unavailable">non dispo.</span>
@@ -230,17 +255,19 @@ $avatarSrc = $avatarValue !== '' ? assetPath($avatarValue) : $defaultAvatar;
 </main>
 
 <script>
-  document.addEventListener('click', function (e) {
-    const deleteLink = e.target.closest('a.action.action--delete');
-    if (!deleteLink) return;
+document.addEventListener('click', function (e) {
+  const deleteLink = e.target.closest('a.action.action--delete');
+  if (!deleteLink) {
+    return;
+  }
 
-    e.preventDefault();
+  e.preventDefault();
 
-    const ok = window.confirm('Voulez-vous vraiment supprimer ce livre ?');
-    if (ok) {
-      window.location.href = deleteLink.href;
-    }
-  });
+  const ok = window.confirm('Voulez-vous vraiment supprimer ce livre ?');
+  if (ok) {
+    window.location.href = deleteLink.href;
+  }
+});
 </script>
 
 <?php require __DIR__ . '/../layout/footer.php'; ?>
